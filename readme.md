@@ -61,7 +61,7 @@ run local testing web server
 $ php artisan serve
 ```
 
-The default username and password, is `admin/admin`.
+The default email and password, is `admin@example.com/admin1234`.
 
 ## License
 

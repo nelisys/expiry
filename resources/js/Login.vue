@@ -82,7 +82,7 @@
 
                         this.$emit('loggedIn')
                         window.axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.token;
-                        window.location = '/';
+                        window.location = '/products';
                     })
                     .catch(error => {
 

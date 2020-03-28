@@ -10,6 +10,6 @@ $factory->define(Product::class, function (Faker $faker) {
         'user_id' => auth()->user()->id ?? null,
         'name' => $faker->name,
         'description' => $faker->sentence(),
-        'expiry_date' => $faker->date(),
+        'expiry_date' => $faker->dateTimeBetween('-7 days', '7 days')->format('Y-m-d'),
     ];
 });

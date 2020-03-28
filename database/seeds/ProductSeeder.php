@@ -19,8 +19,8 @@ class ProductSeeder extends Seeder
             'password' => bcrypt('admin1234'),
         ]);
 
-        factory(Product::class, 25)->create([
-            'user_id' => $user->id,
-        ]);
+        //factory(Product::class, 99)->create([
+        //    'user_id' => $user->id,
+        //]);
     }
 }

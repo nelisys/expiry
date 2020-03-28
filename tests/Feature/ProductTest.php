@@ -94,6 +94,67 @@ class ProductTest extends TestCase
             ]);
     }
 
+    /** @test */
+    public function user_can_search_products_by_status()
+    {
+        $this->signIn();
+
+        $product_1 = factory(Product::class)->create(['expiry_date' => '2020-03-26']);
+        $product_2 = factory(Product::class)->create(['expiry_date' => '2020-03-27']);
+        $product_3 = factory(Product::class)->create(['expiry_date' => '2020-03-28']);
+        $product_4 = factory(Product::class)->create(['expiry_date' => '2020-03-28']);
+        $product_5 = factory(Product::class)->create(['expiry_date' => '2020-03-29']);
+        $product_6 = factory(Product::class)->create(['expiry_date' => '2020-03-30']);
+
+        $expectedDataExpired = [
+            [
+                'id' => $product_1->id,
+            ],
+            [
+                'id' => $product_2->id,
+            ],
+        ];
+
+        $expectedDataToday = [
+            [
+                'id' => $product_3->id,
+            ],
+            [
+                'id' => $product_4->id,
+            ],
+        ];
+
+        $expectedDataFuture = [
+            [
+                'id' => $product_5->id,
+            ],
+            [
+                'id' => $product_6->id,
+            ],
+        ];
+
+        $this->json('GET', "/api/products?status=expired")
+            ->assertStatus(200)
+            ->assertJsonCount(2, 'data')
+            ->assertJson([
+                'data' => $expectedDataExpired,
+            ]);
+
+        $this->json('GET', "/api/products?status=today")
+            ->assertStatus(200)
+            ->assertJsonCount(2, 'data')
+            ->assertJson([
+                'data' => $expectedDataToday,
+            ]);
+
+        $this->json('GET', "/api/products?status=future")
+            ->assertStatus(200)
+            ->assertJsonCount(2, 'data')
+            ->assertJson([
+                'data' => $expectedDataFuture,
+            ]);
+    }
+
     // *** show ***
 
     /** @test */

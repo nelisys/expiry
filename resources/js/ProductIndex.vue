@@ -2,7 +2,18 @@
     <div>
         <my-spinner :open="openSpinner"></my-spinner>
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-            <h3>Products</h3>
+            <h3>
+                Products
+                <span class="badge badge-danger" v-if="status == 'expired'">
+                    {{ status }}
+                </span>
+                <span class="badge badge-info" v-else-if="status == 'today'">
+                    {{ status }}
+                </span>
+                <span class="badge badge-success" v-else-if="status == 'future'">
+                    {{ status }}
+                </span>
+            </h3>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <a href="/products/create" class="btn btn-sm btn-success">+ create</a>
             </div>
@@ -24,6 +35,7 @@
                 </div>
                 <p class="mb-1" :class="`text-` + diffForHumans(product.expiry_date).color">
                     {{ diffForHumans(product.expiry_date).text }}
+                    ({{ product.expiry_date }})
                 </p>
             </a>
         </div>
@@ -37,10 +49,15 @@
                 openSpinner: false,
                 products:[],
                 hoverProductId: null,
+                status: '',
             };
         },
 
         mounted() {
+            if (this.$route.query.status) {
+                this.status = this.$route.query.status;
+            }
+
             this.refresh();
         },
 
@@ -57,15 +74,15 @@
 
                 if (diffDays == 0) {
                     return {
-                        color: 'warning',
-                        text: 'expired',
+                        color: 'info',
+                        text: 'today',
                     };
                 }
 
                 if (diffDays == 1) {
                     return {
                         color: 'success',
-                        text: 'expired',
+                        text: 'tomorrow',
                     };
                 }
 
@@ -79,7 +96,7 @@
                 this.openSpinner = true;
 
                 try {
-                    await axios.get('/api/products?sort=expiry_date&order=desc')
+                    await axios.get(`/api/products?status=${this.status}&sort=expiry_date&order=desc&per_page=100`)
                         .then(response => {
                             this.products = response.data.data;
                         });

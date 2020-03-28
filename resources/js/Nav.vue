@@ -23,12 +23,10 @@
 
                 <li class="nav-item dropdown" v-if="isLoggedIn">
                     <a class="nav-link dropdown-toggle user-profile-link" href="#" id="dropdown-user" data-toggle="dropdown">
-                        <i class="fas fa-user-circle"></i>
                         {{ user.email }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item user-logout-link" href="" @click="logout">
-                            <i class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>
                     </div>

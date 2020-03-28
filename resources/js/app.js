@@ -40,7 +40,17 @@ window.events = new Vue();
 // });
 
 // register flash events
-Vue.component('flash', require('./Flash.vue').default);
+Vue.component('flash', require('./components/Flash.vue').default);
+Vue.component('my-spinner', require('./components/MySpinner.vue').default);
+
+Vue.component('my-input-text', require('./components/MyInputText.vue').default);
+Vue.component('my-label-input-text', require('./components/MyLabelInputText.vue').default);
+
+Vue.component('my-input-textarea', require('./components/MyInputTextarea.vue').default);
+Vue.component('my-label-input-textarea', require('./components/MyLabelInputTextarea.vue').default);
+
+Vue.component('my-input-date-picker', require('./components/MyInputDatePicker.vue').default);
+Vue.component('my-label-input-date-picker', require('./components/MyLabelInputDatePicker.vue').default);
 
 window.flash = function (message, level) {
     window.events.$emit('flash', message, level);

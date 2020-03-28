@@ -18,12 +18,20 @@ const routes = [
         }
     },
     {
-        name: 'products',
+        name: 'products.index',
         path: '/products',
         component: require('./ProductIndex.vue').default,
         meta: {
             requiresAuth: true,
         }
+    },
+    {
+        name: 'products.crud',
+        path: '/products/:id/:action?',
+        component: require('./ProductCrud.vue').default,
+        meta: {
+            requiresAuth: true,
+        },
     },
 ];
 

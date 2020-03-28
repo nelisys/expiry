@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Laravel\Sanctum\Sanctum;
 
 use App\User;
 
@@ -14,7 +15,7 @@ abstract class TestCase extends BaseTestCase
     {
         $user = factory(User::class)->create();
 
-        $this->actingAs($user, 'api');
+        Sanctum::actingAs($user);
 
         return $this;
     }

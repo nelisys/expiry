@@ -5,6 +5,11 @@ const routes = [
         component: require('./NotFound.vue').default,
     },
     {
+        name: 'login',
+        path: '/login',
+        component: require('./Login.vue').default,
+    },
+    {
         name: 'home',
         path: '/',
         component: require('./Home.vue').default,

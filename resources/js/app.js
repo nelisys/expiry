@@ -16,6 +16,24 @@ let router = new VueRouter({
     routes: routes,
 })
 
+// events bus
+window.events = new Vue();
+
+// events.$emit('submitForm', 'abc');
+//
+// events.$on('submitForm', function(value) {
+// });
+
+// register flash events
+Vue.component('flash', require('./Flash.vue').default);
+
+window.flash = function (message, level) {
+    window.events.$emit('flash', message, level);
+};
+
+Vue.config.devtools = false;
+Vue.config.productionTip = false;
+
 const app = new Vue({
     el: '#app',
     components: { App },

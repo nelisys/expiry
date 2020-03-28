@@ -111,7 +111,7 @@ class ProductTest extends TestCase
     {
         $this->signIn();
 
-        $this->json('GET', '/api/produdcts/9999')
+        $this->json('GET', '/api/products/9999')
             ->assertStatus(404);
     }
 

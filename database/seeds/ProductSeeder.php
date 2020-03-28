@@ -2,6 +2,9 @@
 
 use Illuminate\Database\Seeder;
 
+use App\User;
+use App\Product;
+
 class ProductSeeder extends Seeder
 {
     /**
@@ -11,6 +14,10 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $user = factory(User::class)->create();
+
+        factory(Product::class, 25)->create([
+            'user_id' => $user->id,
+        ]);
     }
 }

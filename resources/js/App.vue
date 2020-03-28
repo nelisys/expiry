@@ -1,9 +1,10 @@
 <template>
     <div>
-        <my-nav></my-nav>
+        <my-nav :user="user" :isLoggedIn="isLoggedIn"></my-nav>
 
         <div class="container-fluid py-2">
-            <router-view></router-view>
+            <flash message=""></flash>
+            <router-view @loggedIn="updateSession"></router-view>
         </div>
 
         <footer class="footer py-2 border-top">
@@ -18,3 +19,37 @@
         </footer>
     </div>
 </template>
+
+<script>
+    export default {
+        data() {
+            return {
+                user: '',
+                isLoggedIn: localStorage.getItem('user') != null,
+            }
+        },
+
+        mounted() {
+            this.updateSession();
+            events.$on('logout', this.logout);
+        },
+
+        methods: {
+            updateSession() {
+                this.isLoggedIn = localStorage.getItem('user');
+
+                this.user = JSON.parse(localStorage.getItem('user'));
+            },
+
+            logout() {
+                // TODO: submit logout to server
+                localStorage.removeItem('user')
+                localStorage.removeItem('token')
+
+                this.isLoggedIn = false;
+                window.axios.defaults.headers.common['Authorization'] = '';
+                window.location = '/login';
+            }
+        }
+    }
+</script>

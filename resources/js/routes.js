@@ -13,11 +13,17 @@ const routes = [
         name: 'home',
         path: '/',
         component: require('./Home.vue').default,
+        meta: {
+            requiresAuth: true,
+        }
     },
     {
         name: 'products',
         path: '/products',
         component: require('./ProductIndex.vue').default,
+        meta: {
+            requiresAuth: true,
+        }
     },
 ];
 

@@ -14,7 +14,22 @@ let router = new VueRouter({
     mode: 'history',
     linkActiveClass: "active",
     routes: routes,
-})
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (localStorage.getItem('user') == null) {
+            next({
+                name: 'login',
+                params: { nextUrl: to.fullPath }
+            })
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+});
 
 // events bus
 window.events = new Vue();

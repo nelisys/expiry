@@ -9,10 +9,69 @@
         </button>
         <div class="collapse navbar-collapse" id="navbars">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a href="/products" class="nav-link">Products</a>
+                <template v-if="isLoggedIn">
+                    <li class="nav-item">
+                        <a href="/products" class="nav-link">Products</a>
+                    </li>
+                </template>
+            </ul>
+
+            <ul class="navbar-nav">
+                <router-link class="nav-item" tag="li" to="/login" exact v-if="! isLoggedIn">
+                    <a class="nav-link">Login</a>
+                </router-link>
+
+                <li class="nav-item dropdown" v-if="isLoggedIn">
+                    <a class="nav-link dropdown-toggle user-profile-link" href="#" id="dropdown-user" data-toggle="dropdown">
+                        <i class="fas fa-user-circle"></i>
+                        {{ user.email }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item user-logout-link" href="" @click="logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </div>
                 </li>
             </ul>
         </div>
     </nav>
 </template>
+
+<script>
+    export default {
+        props: ['user', 'isLoggedIn'],
+
+        date() {
+            return {
+                activeName: '',
+            };
+        },
+
+        mounted() {
+            if (! this.isLoggedIn) {
+                return;
+            }
+
+            this.updateNav();
+        },
+
+        watch: {
+            '$route': 'updateNav'
+        },
+
+        methods: {
+            logout() {
+                events.$emit('logout');
+            },
+
+            isActive(name) {
+                return name == this.activeName;
+            },
+
+            updateNav()  {
+                let path = this.$route.path;
+            },
+        }
+    }
+</script>

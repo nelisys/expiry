@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use App\Product;
+use App\User;
 
 class ProductTest extends TestCase
 {
@@ -24,15 +25,20 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function user_can_list_products()
+    public function user_can_list_their_own_products()
     {
         $this->signIn();
 
-        $user = auth()->user();
+        // own products
+        factory(Product::class, 3)->create();
 
-        factory(Product::class, 2)->create();
+        // another products
+        factory(Product::class, 2)->create([
+            'user_id' => factory(User::class)->create()->id,
+        ]);
 
-        $products = Product::orderBy('id')
+        $products = Product::where('user_id', auth()->user()->id)
+            ->orderBy('id')
             ->get();
 
         $expectedData = $products->toArray();
@@ -110,7 +116,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function user_can_view_a_product()
+    public function user_can_view_own_product()
     {
         $this->signIn();
 
@@ -122,6 +128,24 @@ class ProductTest extends TestCase
             ->assertStatus(200)
             ->assertJson([
                 'data' => $expectedData,
+            ]);
+    }
+
+    /** @test */
+    public function user_cannot_view_another_user_product()
+    {
+        $this->signIn();
+
+        $product = factory(Product::class)->create([
+            'user_id' => factory(User::class)->create()->id,
+        ]);
+
+        $expectedData = $product->toArray();
+
+        $this->json('GET', "/api/products/{$product->id}")
+            ->assertStatus(403)
+            ->assertJson([
+                'message' => 'This action is unauthorized.'
             ]);
     }
 
@@ -162,6 +186,7 @@ class ProductTest extends TestCase
         $this->signIn();
 
         $data = factory(Product::class)->raw();
+        unset($data['user_id']);
 
         $this->json('POST', '/api/products', $data)
             ->assertStatus(201)
@@ -232,7 +257,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function user_can_update_a_product()
+    public function user_can_update_own_product()
     {
         $this->signIn();
 
@@ -251,6 +276,33 @@ class ProductTest extends TestCase
         $this->assertDatabaseHas('products', $data);
     }
 
+    /** @test */
+    public function user_cannot_update_another_user_product()
+    {
+        $this->signIn();
+
+        $product = factory(Product::class)->create([
+            'user_id' => factory(User::class)->create()->id,
+        ]);
+
+        $expectedData = [
+            'user_id' => $product->user_id,
+            'name' => $product->name,
+            'description' => $product->description,
+            'expiry_date' => $product->expiry_date,
+        ];
+
+        $data = factory(Product::class)->raw();
+
+        $this->json('PATCH', "/api/products/{$product->id}", $data)
+            ->assertStatus(403)
+            ->assertJson([
+                'message' => 'This action is unauthorized.'
+            ]);
+
+        $this->assertDatabaseHas('products', $expectedData);
+    }
+
     // *** destroy ***
 
     /** @test */
@@ -264,7 +316,7 @@ class ProductTest extends TestCase
     }
 
     /** @test */
-    public function authorized_user_can_delete_a_product()
+    public function user_can_delete_own_product()
     {
         $this->signIn();
 
@@ -276,5 +328,30 @@ class ProductTest extends TestCase
         $this->assertDatabaseMissing('products', [
             'id' => $product->id,
         ]);
+    }
+
+    /** @test */
+    public function user_can_delete_another_user_product()
+    {
+        $this->signIn();
+
+        $product = factory(Product::class)->create([
+            'user_id' => factory(User::class)->create()->id,
+        ]);
+
+        $expectedData = [
+            'user_id' => $product->user_id,
+            'name' => $product->name,
+            'description' => $product->description,
+            'expiry_date' => $product->expiry_date,
+        ];
+
+        $this->json('DELETE', "/api/products/{$product->id}")
+            ->assertStatus(403)
+            ->assertJson([
+                'message' => 'This action is unauthorized.'
+            ]);
+
+        $this->assertDatabaseHas('products', $expectedData);
     }
 }

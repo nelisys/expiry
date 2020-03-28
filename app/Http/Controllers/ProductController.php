@@ -15,7 +15,8 @@ class ProductController extends Controller
     {
         $per_page = request()->get('per_page') ?: 10;
 
-        $products = Product::filter(new ProductFilter());
+        $products = Product::where('user_id', auth()->user()->id)
+            ->filter(new ProductFilter());
 
         if (! request('sort')) {
             $products->orderBy('id');
@@ -28,18 +29,25 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $this->authorize('access', $product);
+
         return new ProductResource($product);
     }
 
     public function store(ProductRequest $request)
     {
-        $product = Product::create($request->toArray());
+        $data = $request->toArray();
+        $data['user_id'] = auth()->user()->id;
+
+        $product = Product::create($data);
 
         return new ProductResource($product);
     }
 
     public function update(ProductRequest $request, Product $product)
     {
+        $this->authorize('access', $product);
+
         $updated = $product->update($request->toArray());
 
         return new ProductResource($product);
@@ -47,6 +55,8 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        $this->authorize('access', $product);
+
         $deleted = $product->delete();
 
         return response([], 200);

@@ -8,6 +8,7 @@ use App\Http\Filters\ProductFilter;
 class Product extends Model
 {
     protected $fillable = [
+        'user_id',
         'name',
         'description',
         'expiry_date',

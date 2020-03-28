@@ -2,7 +2,7 @@
 
 ## Requirements
 
-Neliserp is built with Laravel 7, so to use the software your system should meet Laravel 7 requirements. Please refer to [Laravel Installation](https://laravel.com/docs/7.x/installation) for more details.
+Expiry is built with Laravel 7, so to use the software your system should meet Laravel 7 requirements. Please refer to [Laravel Installation](https://laravel.com/docs/7.x/installation) for more details.
 
 ## Installation
 
@@ -65,4 +65,4 @@ The default email and password, is `admin@example.com/admin1234`.
 
 ## License
 
-Neliserp is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Expiry is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

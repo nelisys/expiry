@@ -153,6 +153,15 @@ class ProductTest extends TestCase
             ->assertJson([
                 'data' => $expectedDataFuture,
             ]);
+
+        // summary
+        $this->json('GET', '/api/products/summary')
+            ->assertStatus(200)
+            ->assertJson([
+                'expired' => 2,
+                'today' => 2,
+                'future' => 2,
+            ]);
     }
 
     // *** show ***

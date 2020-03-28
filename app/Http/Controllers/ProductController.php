@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 use App\Product;
 use App\Http\Filters\ProductFilter;
@@ -11,6 +12,24 @@ use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
+    public function summary()
+    {
+        $products_expired = Product::where('user_id', auth()->user()->id)
+            ->whereDate('expiry_date', '<', Carbon::today())->count();
+
+        $products_today = Product::where('user_id', auth()->user()->id)
+            ->whereDate('expiry_date', Carbon::today())->count();
+
+        $products_future = Product::where('user_id', auth()->user()->id)
+            ->whereDate('expiry_date', '>', Carbon::today())->count();
+
+        return [
+            'expired' => $products_expired,
+            'today' => $products_today,
+            'future' => $products_future,
+        ];
+    }
+
     public function index()
     {
         $per_page = request()->get('per_page') ?: 10;

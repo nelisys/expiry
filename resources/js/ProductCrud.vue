@@ -121,7 +121,7 @@
 
                 this.form[submitUrl.method](submitUrl.url)
                     .then(response => {
-                        this.$router.replace('/products');
+                        location.href = '/products';
                         flash(submitUrl.flash_message);
                         this.submitted = false;
                     })

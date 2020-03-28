@@ -126,7 +126,7 @@
                             console.log('deleted');
                         });
 
-                    await axios.get('/api/products?sort=expiry_date&order=desc')
+                    await axios.get(`/api/products?status=${this.status}&sort=expiry_date&per_page=100`)
                         .then(response => {
                             this.products = response.data.data;
                         });

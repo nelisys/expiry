@@ -38,7 +38,7 @@ class ProductController extends Controller
             ->filter(new ProductFilter());
 
         if (! request('sort')) {
-            $products->orderBy('id');
+            $products->orderBy('expiry_date');
         }
 
         $products = $products->paginate($per_page);

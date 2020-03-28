@@ -2,7 +2,7 @@
     <div>
         <my-spinner :open="openSpinner"></my-spinner>
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-1 border-bottom">
-            <strong>products</strong>
+            <strong>Product</strong>
             <div>
                 <template v-if="action == 'show' && product">
                     <router-link :to="'/products/' + id + '/edit'" class="my-btn-edit" exact>edit</router-link>

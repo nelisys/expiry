@@ -14,10 +14,15 @@
                     {{ status }}
                 </span>
             </h3>
-            <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-toolbar mb-2 mb-md-0" v-if="products.length > 0">
                 <a href="/products/create" class="btn btn-sm btn-success">+ create</a>
             </div>
         </div>
+
+        <template v-if="products.length == 0">
+            no Products<br>
+            <a href="/products/create" class="btn btn-sm btn-success">+ create</a>
+        </template>
 
         <div class="list-group">
             <a v-for="product in products" :key="product.id"
@@ -29,7 +34,7 @@
                     <small>
                         <button v-show="hoverProductId == product.id"
                             type="button"
-                            @click="deleteProduct(product.id)"
+                            @click="deleteProduct(product)"
                             class="btn btn-sm btn-outline-danger">delete</button>
                     </small>
                 </div>
@@ -96,7 +101,7 @@
                 this.openSpinner = true;
 
                 try {
-                    await axios.get(`/api/products?status=${this.status}&sort=expiry_date&order=desc&per_page=100`)
+                    await axios.get(`/api/products?status=${this.status}&sort=expiry_date&per_page=100`)
                         .then(response => {
                             this.products = response.data.data;
                         });
@@ -108,15 +113,15 @@
                 }
             },
 
-            async deleteProduct(product_id) {
+            async deleteProduct(product) {
                 try {
-                     var r = confirm(`Confirm delete`);
+                     var r = confirm(`Confirm delete ${product.name}`);
 
                     if (! r) {
                         return;
                     }
 
-                    await axios.delete(`/api/products/${product_id}`)
+                    await axios.delete(`/api/products/${product.id}`)
                         .then(response => {
                             console.log('deleted');
                         });

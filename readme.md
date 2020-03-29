@@ -9,7 +9,7 @@ Expiry is built with Laravel 7, so to use the software your system should meet L
 run `git clone` the software.
 
 ```console
-$ git clone https://github.com/neliserp/neliserp
+$ git clone https://github.com/nelisys/expiry
 ```
 
 run `composer install` the required packages
